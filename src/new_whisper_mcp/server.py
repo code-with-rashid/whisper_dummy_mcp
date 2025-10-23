@@ -18,6 +18,8 @@ logger = logging.getLogger(__name__)
 # Configuration
 CHUNK_DURATION_SEC = 20  # seconds per chunk
 
+NUM_CHUNKS = int(os.getenv("NUM_CHUNKS", "100"))
+
 # Initialize FastMCP server
 mcp = FastMCP("Mock Whisper MCP server")
 
@@ -64,11 +66,8 @@ async def split_audio(input_path: str, chunk_len: int = CHUNK_DURATION_SEC) -> l
     logger.info(f"Splitting audio file {input_path}")
     tmp_dir = Path(tempfile.mkdtemp(prefix="audio_chunks_"))
     
-    # Generate exactly 100 chunks
-    num_chunks = 100
-    
     chunks = []
-    for i in range(num_chunks):
+    for i in range(NUM_CHUNKS):
         chunk_path = tmp_dir / f"chunk_{i:03d}.mp3"
         chunk_path.touch()
         chunks.append(chunk_path)
